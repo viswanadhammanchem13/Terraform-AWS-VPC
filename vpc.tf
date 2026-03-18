@@ -81,8 +81,9 @@ resource "aws_subnet" "public" {
     
   }
 
+# EIP Creation for NAT Gateway
   resource "aws_eip" "eip" {
-   domain           = "vpc"
+   domain           = "vpc" # (Optional) Indicates if this EIP is for use in VPC (vpc).
    tags = merge(
         var.eip_gateway_tags,
         local.common_tags,
@@ -93,9 +94,11 @@ resource "aws_subnet" "public" {
 
 }
 
+#NAT Gateway Creation
+
 resource "aws_nat_gateway" "main" {
-  allocation_id = aws_eip.eip.id
-  subnet_id     = aws_subnet.public[0].id
+  allocation_id = aws_eip.eip.id # Allocation ID of the Elastic IP address.
+  subnet_id     = aws_subnet.public[0].id # Subnet ID of the public subnet where the NAT Gateway will be deployed.
 
   tags = merge(
         var.eip_gateway_tags,
@@ -107,9 +110,11 @@ resource "aws_nat_gateway" "main" {
 
   # To ensure proper ordering, it is recommended to add an explicit dependency
   # on the Internet Gateway for the VPC.
-  depends_on = [aws_internet_gateway.main]
+  depends_on = [aws_internet_gateway.main] # This ensures that the NAT Gateway is created after the Internet Gateway is available.
 }
 
+
+# Route Tables Creation 
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.main.id
 
@@ -146,6 +151,8 @@ resource "aws_route_table" "database" {
     )
 }
 
+# Routes Creation for Internet Gateway and NAT Gateway 
+
 resource "aws_route" "public" {
   route_table_id            = aws_route_table.public.id
   destination_cidr_block    = "0.0.0.0/0"
@@ -163,6 +170,7 @@ resource "aws_route" "database" {
   destination_cidr_block    = "0.0.0.0/0"
   nat_gateway_id = aws_nat_gateway.main.id
 }
+
 
 resource "aws_route_table_association" "public" {
   count = length(var.public_subnet_cidrs)
