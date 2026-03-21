@@ -20,9 +20,6 @@ data "aws_route_table" "main" {
     values = ["true"]
   }
 }
-##TO CHECK THE AVAILABILITY ZONES IN THE REGION
-# output "azs_info" {
-#   value = data.aws_availability_zones.available
-# }
+
 
 
