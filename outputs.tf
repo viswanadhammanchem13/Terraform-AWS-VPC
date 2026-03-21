@@ -7,12 +7,12 @@ output "public_subnet_ids" {
     value = aws_subnet.public[*].id  
 }
 
-# output "private_subnet_ids" {
-#     value = aws_vpc.private_subnets[*].id
+output "private_subnet_ids" {
+    value = aws_subnet.private[*].id
   
-# }
+}
 
-# output "database_subnet_ids" {
-#     value = aws_vpc.database_subnets[*].id
+output "database_subnet_ids" {
+    value = aws_subnet.database[*].id
   
-# }
+}
