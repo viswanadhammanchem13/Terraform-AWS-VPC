@@ -1,7 +1,7 @@
-# roboshop-dev-vpc
+## VPC Creation (roboshop-dev-vpc(Name of the VPC)), 
 resource "aws_vpc" "main" {
   cidr_block       = var.cidr_block
-  instance_tenancy = "default"
+  instance_tenancy = "default" # defines the tenancy (placement) of EC2 instances that will run inside that VPC.
   enable_dns_hostnames = "true"
 
   tags = merge(
@@ -14,9 +14,10 @@ resource "aws_vpc" "main" {
   
 }
 
-##  roboshop-dev-igw
+##  IGW Creation (roboshop-dev-igw (Name of the Internet Gateway))
+
 resource "aws_internet_gateway" "main" {
-  vpc_id = aws_vpc.main.id
+  vpc_id = aws_vpc.main.id # ID of the VPC to which the Internet Gateway will be attached.
 
   tags = merge(
         var.igw_tags,
@@ -28,10 +29,10 @@ resource "aws_internet_gateway" "main" {
   
 }
 
-##roboshop-dev-public-east1a
+## Creating Public Subnet (roboshop-dev-public-us-east-1a)
 resource "aws_subnet" "public" {
     count = length(var.public_subnet_cidrs)
-  vpc_id     = aws_vpc.main.id
+  vpc_id     = aws_vpc.main.id 
   cidr_block = var.public_subnet_cidrs[count.index]
   availability_zone = local.az-names[count.index]
   # availability_zone = data.aws_availability_zones.available.names[count.index]
