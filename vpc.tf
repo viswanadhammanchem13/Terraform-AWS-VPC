@@ -47,7 +47,7 @@ resource "aws_subnet" "public" {
     
   }
 
-##roboshop-dev-private-east1a
+## Creating Private Subnet (roboshop-dev-private-us-east-1a)
   resource "aws_subnet" "private" {
     count = length(var.private_subnet_cidrs)
   vpc_id     = aws_vpc.main.id
