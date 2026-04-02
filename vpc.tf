@@ -172,6 +172,7 @@ resource "aws_route" "database" {
   nat_gateway_id = aws_nat_gateway.main.id
 }
 
+##Route Table Associations for Public, Private and Database Subnets 
 
 resource "aws_route_table_association" "public" {
   count = length(var.public_subnet_cidrs)
